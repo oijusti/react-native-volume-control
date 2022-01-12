@@ -41,7 +41,7 @@ public class RNVolumeControlModule extends ReactContextBaseJavaModule
   }
 
   @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {}
+  public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {}
 
   @Override
   public void onHostResume() {
@@ -55,6 +55,10 @@ public class RNVolumeControlModule extends ReactContextBaseJavaModule
 
   @Override
   public void onHostDestroy() {}
+
+  @Override
+  public void onNewIntent(Intent intent) {
+  }
 
   @ReactMethod
   public void addListener(String eventName) {}
