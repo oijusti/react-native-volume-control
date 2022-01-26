@@ -7,7 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.react.bridge.ActivityEventListener;
@@ -41,12 +41,7 @@ public class RNVolumeControlModule extends ReactContextBaseJavaModule
   }
 
   @Override
-  public void onNewIntent(Intent intent) {
-  }
-
-  @Override
-  public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-  }
+  public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {}
 
   @Override
   public void onHostResume() {
@@ -59,8 +54,17 @@ public class RNVolumeControlModule extends ReactContextBaseJavaModule
   }
 
   @Override
-  public void onHostDestroy() {
+  public void onHostDestroy() {}
+
+  @Override
+  public void onNewIntent(Intent intent) {
   }
+
+  @ReactMethod
+  public void addListener(String eventName) {}
+
+  @ReactMethod
+  public void removeListeners(Integer count) {}
 
   @Override
   public void initialize() {

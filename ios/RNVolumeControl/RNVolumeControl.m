@@ -13,7 +13,6 @@
 
 @implementation RNVolumeControl {
     MPVolumeView *volumeView;
-    UISlider *volumeViewSlider;
     AVAudioSession *audioSession;
     bool hasListeners;
 }
@@ -46,6 +45,7 @@ RCT_EXPORT_MODULE(VolumeControl)
 
 - (void)initAudioSessionObserver{
     audioSession = [AVAudioSession sharedInstance];
+    [audioSession setActive:YES error:nil];
     [audioSession addObserver:self forKeyPath:@"outputVolume" options:0 context:nil];
 }
 
@@ -54,18 +54,17 @@ RCT_EXPORT_MODULE(VolumeControl)
     volumeView = [[MPVolumeView alloc] init];
     volumeView.showsRouteButton = NO;
     volumeView.showsVolumeSlider = NO;
-    
-    for (UIView *view in volumeView.subviews) {
-        if ([view isKindOfClass:[UISlider class]]) {
-            volumeViewSlider = (UISlider *)view;
-            break;
-        }
-    }
 }
 
 - (void)setVolume:(float)volumeValue {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        volumeViewSlider.value = volumeValue;
+        for (UIView *view in self->volumeView.subviews) {
+            if ([view isKindOfClass:[UISlider class]]) {
+                UISlider *volumeViewSlider = (UISlider *)view;
+                volumeViewSlider.value = volumeValue;
+                break;
+            }
+        }
     });
 }
 
@@ -89,7 +88,13 @@ RCT_EXPORT_METHOD(change:(float)value)
 
 RCT_EXPORT_METHOD(getVolume:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
     dispatch_sync(dispatch_get_main_queue(), ^{
-        resolve([NSNumber numberWithFloat:[volumeViewSlider value]]);
+        for (UIView *view in volumeView.subviews) {
+            if ([view isKindOfClass:[UISlider class]]) {
+                UISlider *volumeViewSlider = (UISlider *)view;
+                resolve([NSNumber numberWithFloat:[volumeViewSlider value]]);
+                break;
+            }
+        }
     });
 }
 
